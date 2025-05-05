@@ -8,8 +8,21 @@ def list_prompts():
     return [f for f in os.listdir(folder) if f.endswith(".txt")]
 
 def list_models():
-    return ["unsloth/llama-3-8b-Instruct", "commonpool_xl_clip_s13b_b90k", "ViT-B-32"]
+    return [
+    "unsloth/llama-3-8b-Instruct",
+    "unsloth/Qwen3-1.7B-unsloth-bnb-4bit", # Qwen 14B 2x faster
+    "unsloth/Qwen3-4B-unsloth-bnb-4bit",
+    "unsloth/Qwen3-8B-unsloth-bnb-4bit",
+    "unsloth/Qwen3-14B-unsloth-bnb-4bit",
+    "unsloth/Qwen3-32B-unsloth-bnb-4bit",
 
+    # 4bit dynamic quants for superior accuracy and low memory use
+    "unsloth/gemma-3-12b-it-unsloth-bnb-4bit",
+    "unsloth/Phi-4",
+    "unsloth/Llama-3.1-8B",
+    "unsloth/Llama-3.2-3B",
+    "unsloth/orpheus-3b-0.1-ft-unsloth-bnb-4bit"
+    ]
 def get_file_content(filename):
     try:
         with open(os.path.join("prompt", filename), 'r', encoding='utf-8') as f:
