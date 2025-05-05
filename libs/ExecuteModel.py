@@ -10,6 +10,8 @@ from transformers import (
     SiglipImageProcessor,
     SiglipVisionModel,
 )
+import requests
+from tqdm import tqdm
 import os
 
 Model_LLM = ""
@@ -121,9 +123,35 @@ class ProjectionModule(nn.Module):
         return self.model(x)
 
 
+def download_file(url, destination):
+    """Download file with progress bar."""
+    response = requests.get(url, stream=True)
+    total_size = int(response.headers.get('content-length', 0))
+    block_size = 1024  # 1 Kibibyte
+    with open(destination, 'wb') as file, tqdm(
+        desc=f"Downloading {os.path.basename(destination)}",
+        total=total_size,
+        unit='iB',
+        unit_scale=True,
+        unit_divisor=1024,
+    ) as bar:
+        for data in response.iter_content(block_size):
+            file.write(data)
+            bar.update(len(data))
+
 def load_projection_module(mm_hidden_size=1152, hidden_size=4096, device="cuda"):
+    model_path = "./model/mm_projector.bin"
+    url = "https://huggingface.co/qresearch/llama-3-vision-alpha/resolve/main/mm_projector.bin"
+
+    # Cek dan unduh jika belum ada
+    if not os.path.exists(model_path):
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        print(f"[INFO] File {model_path} not found. Downloading from {url} ...")
+        download_file(url, model_path)
+        print(f"[INFO] Download completed.")
+
     projection_module = ProjectionModule(mm_hidden_size, hidden_size)
-    checkpoint = torch.load("./model/mm_projector.bin")
+    checkpoint = torch.load(model_path)
     checkpoint = {k.replace("mm_projector.", ""): v for k, v in checkpoint.items()}
     projection_module.load_state_dict(checkpoint)
     projection_module = projection_module.to(device).half()
