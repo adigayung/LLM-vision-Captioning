@@ -1,7 +1,7 @@
-# FILE NAME : main.py
 
 import gradio as gr
 import warnings
+import webbrowser
 
 warnings.filterwarnings("ignore")
 
@@ -21,4 +21,10 @@ with gr.Blocks() as app:
         tab2_ui()
         tab3_ui()
 
-app.launch(share=IN_COLAB)
+if not IN_COLAB:
+    webbrowser.open("http://127.0.0.1:7534/?__theme=dark")
+
+# app.launch(share=IN_COLAB)
+app.launch(share=IN_COLAB, server_port=7534)
+
+

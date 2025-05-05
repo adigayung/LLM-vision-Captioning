@@ -9,3 +9,4 @@ fastapi
 ffmpy
 pydub
 pandas
+colorama

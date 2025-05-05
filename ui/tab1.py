@@ -1,5 +1,5 @@
 # FILE NAME : ui/tab1.py
-
+import torch
 import gradio as gr
 from ui.utils import list_prompts, list_models, restart_python, baca_file
 from libs.LoadModel import TextToImage
@@ -19,9 +19,9 @@ def tab1_ui():
         output_caption1 = gr.Textbox(label="Caption Output")
 
         def load_prompt_content(model, prompt_filename, image_path):
-            
             prompt_text = baca_file(prompt_filename)
-            return TextToImage(model, prompt_text, image_path)
+            hasil_caption = TextToImage(model, prompt_text, image_path, True)
+            return hasil_caption
 
         generate_btn1.click(fn=load_prompt_content, inputs=[model_list1, prompt_list1, image_input], outputs=output_caption1)
         refresh_btn1.click(fn=lambda: gr.update(choices=list_prompts()), inputs=None, outputs=prompt_list1)

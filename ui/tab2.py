@@ -1,7 +1,8 @@
 # FILE NAME : ui/tab2.py
 
 import gradio as gr
-from ui.utils import list_prompts, list_models, generate_captions_bulk, restart_python
+from ui.utils import list_prompts, list_models, generate_captions_bulk, restart_python, baca_file
+from libs.LoadModel import TextToImage
 
 def tab2_ui():
     with gr.Tab("Bulk Folder"):
@@ -16,6 +17,11 @@ def tab2_ui():
 
         output_caption2 = gr.Textbox(label="Hasil Proses")
 
-        generate_btn2.click(fn=generate_captions_bulk, inputs=[folder_input, prompt_list2, model_list2], outputs=output_caption2)
+        def load_prompt_contentx(modelx, prompt_filename, image_path):
+            prompt_text = baca_file(prompt_filename)  # Membaca konten file prompt
+            hasil_caption = TextToImage(modelx, prompt_text, image_path, False)
+            return hasil_caption
+
+        generate_btn2.click(fn=load_prompt_contentx, inputs=[model_list2, prompt_list2, folder_input], outputs=output_caption2)
         refresh_btn2.click(fn=list_prompts, inputs=None, outputs=prompt_list2)
         restart_btn2.click(fn=restart_python, inputs=None, outputs=None)
