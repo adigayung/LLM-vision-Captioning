@@ -1,0 +1,11 @@
+accelerate==0.29.3
+bitsandbytes==0.43.1
+pillow==10.3.0
+torch==2.3.0
+transformers==4.40.1
+gradio
+pyparsing
+fastapi
+ffmpy
+pydub
+pandas
